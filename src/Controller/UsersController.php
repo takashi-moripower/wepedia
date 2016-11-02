@@ -42,7 +42,7 @@ use deleteAllTrait {
 		$this->set('users', $this->paginate($this->Users));
 		$this->set('_serialize', ['users']);
 	}
-/*
+/*	非ログインでもユーザー作成だけを許容　コメントアウトで無効
 	public function beforeFilter(\Cake\Event\Event $event) {
 		parent::beforeFilter($event);
 		$this->Auth->allow(['add', 'edit','debug']);
