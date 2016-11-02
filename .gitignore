@@ -6,3 +6,5 @@ backup
 nbproject
 /config
 tmp
+/.htaccess
+/info.php
