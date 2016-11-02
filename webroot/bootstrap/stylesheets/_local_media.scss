@@ -1,0 +1,54 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2016/08/30, 10:20:17
+    Author     : tsukasa
+*/
+
+@mixin mq-sm{
+	@media screen and ( max-width : $screen-sm-max ) and ( min-width:$screen-sm){
+		@content;
+	}
+}
+
+@mixin mq-md{
+	@media screen and ( max-width : $screen-md-max ) and ( min-width:$screen-md){
+		@content;
+	}
+}
+@mixin mq-lg{
+	@media screen and ( min-width:$screen-lg){
+		@content;
+	}
+}
+
+@include mq-sm{
+	body{
+		font-size:12px;
+	}
+	html{
+		font-size:10px;
+	}
+}
+
+@include mq-md{
+	body{
+		font-size:12px;
+	}
+	html{
+		font-size:10px;
+	}
+}
+
+@include mq-lg{
+	body{
+		font-size:14px;
+	}
+	html{
+		font-size:14px;
+	}
+}
+

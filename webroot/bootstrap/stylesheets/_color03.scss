@@ -1,0 +1,7 @@
+
+$bg-header01:			#99de22;
+$bg-header02:			#d2f892;
+
+$brand-primary:			darken( saturate($bg-header01,20%) , 10% );
+$link-color:				darken( $brand-primary , 10%);
+

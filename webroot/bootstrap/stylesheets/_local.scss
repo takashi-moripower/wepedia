@@ -1,0 +1,654 @@
+@charset "utf-8";
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2016/08/26, 10:01:24
+    Author     : tsukasa
+*/
+
+$header-height:82px;
+$footer-height:28px;
+
+
+$sp-menu-font-size:24px;
+
+/*--------------------------------------------------------------------------------
+	z-index
+--------------------------------------------------------------------------------*/
+$z-index-edit-popup : 1100;
+
+/*--------------------------------------------------------------------------------
+	general
+--------------------------------------------------------------------------------*/
+.bg-gray{
+	background-color:#ddd;
+}
+
+.vertical-middle{
+	vertical-align:middle !important;
+}
+
+@mixin trim($width : 10rem){
+	overflow:hidden;
+	white-space:nowrap;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+	width:$width;
+	max-width:$width;
+}
+
+.trim{
+	overflow:hidden;
+	white-space:nowrap;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+}
+
+.trim4{	@include trim(4rem);	}
+.trim8{	@include trim(8rem);	}
+.trim12{	@include trim(12rem);	}
+.trim16{	@include trim(16rem);	}
+
+@mixin gradient-h($color01 , $color02){
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/  */
+	background: $color01; /* Old browsers */
+	background: -moz-linear-gradient(left,  $color01 0%, $color02 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(left,  $color01 0%,$color02 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to right,  $color01 0%,$color02 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$color01', endColorstr='$color02',GradientType=1 ); /* IE6-9 */
+}
+
+.panel .panel-heading h2{
+	margin-top:0;
+	margin-bottom:0;
+	font-size:1.5rem;
+}
+
+/*--------------------------------------------------------------------------------
+	body
+--------------------------------------------------------------------------------*/
+html,body{
+	background:#f8f8f8;
+	height:100%;
+}
+
+/*--------------------------------------------------------------------------------
+	face
+--------------------------------------------------------------------------------*/
+
+@mixin face( $size ){
+	.face>img{
+		max-height:$size;
+		max-width:$size;
+	}
+}
+
+table>tbody>tr>td.face{
+	text-align:center;
+	vertical-align:middle;
+	padding:0;
+}
+
+table>tbody>tr>td.face.text-left{
+	text-align:left;
+}
+table>tbody>tr>td.face.text-right{
+	text-align:right;
+}
+
+
+.face48{	@include face(3.4rem);	}
+.face36{	@include face(2.5rem);	}
+.face32{	@include face(2.2rem);	}
+
+/*--------------------------------------------------------------------------------
+	construction
+--------------------------------------------------------------------------------*/
+#wrap{
+	width: 100%;
+	position: relative;
+	height:auto !important; /*IE6対策*/
+	height: 100%; /*IE6対策*/
+	min-height: 100%;
+
+	margin-bottom:-$footer-height;
+	padding-bottom:$footer-height;
+}
+
+.header{
+	height:$header-height;
+	margin-bottom:1rem;
+}
+
+.footer{
+	height:$footer-height;
+}
+
+/*--------------------------------------------------------------------------------
+	header
+--------------------------------------------------------------------------------*/
+.header{
+	@include gradient-h( $bg-header01 , $bg-header02 );
+	.logo{
+		padding-top:4px;
+		img{
+			max-width:90%;
+			max-height:$header-height - 8px;
+		}
+	}
+	.nav-header-desktop{
+		margin-top:5px;
+	}
+
+	.nav>li{
+		>a{
+			color:$header-nav-color;
+		}
+		&.active,
+		&:hover,
+			&.dropdown.open{
+			>a{
+				color:$header-nav-active-color;
+				background-color:$header-nav-active-bg;
+			}
+		}
+	}
+
+	.user{
+		padding-top:8px;
+		.btn-group{
+			width:100%;
+			.btn{
+				width:100%;
+				overflow:hidden;
+				text-align:left;
+				color:white;
+				font-size:1.5rem;
+				border:1px solid rgba(255,255,255,0.5);
+				i.fa{
+					padding:0 0.5rem;
+				}
+			}
+		}
+	}
+}
+
+/*--------------------------------------------------------------------------------
+	footer
+--------------------------------------------------------------------------------*/
+.footer{
+	@include gradient-h( $bg-header01 , $bg-header02 );
+	font-size:20px;
+	color:white;
+}
+
+/*--------------------------------------------------------------------------------
+	left-nav
+--------------------------------------------------------------------------------*/
+.product-nav{
+	.dropdown:hover > .dropdown-menu{
+		display: block;
+	}
+	.dropdown-menu.dropdown-left {
+		left:100%;
+		right:auto;
+		top:-.5rem;
+		&::before {right:auto !important; left:9px;}
+		&::after {right:auto !important; left:10px;}
+	}	
+	.nav>li>a{
+		padding:0.25rem 1rem;
+	}
+}
+
+.management-nav{
+	.panel-heading .btn{
+		background-color:transparent;
+		&[aria-expanded="true"] i.fa:before{
+			content: "\f0d8";
+		}
+	}
+
+	ul.nav>li>a{
+		padding-top:.5rem;
+		padding-bottom:.5rem;
+	}
+}
+
+/*--------------------------------------------------------------------------------
+	right-nav
+--------------------------------------------------------------------------------*/
+.section-nav{
+	ul.members{
+		padding-left:1rem;
+		li{
+			list-style:none;
+			.btn{
+				padding:1px 10px;
+				width:100%;
+				text-align:left;
+			}
+		}
+	}
+}
+
+/*--------------------------------------------------------------------------------
+	search form
+--------------------------------------------------------------------------------*/
+.search-form{
+	&.search-form-sales,
+	&.search-form-demands{
+		margin-bottom:-2.5em;
+	}
+
+	button.btn[data-toggle="collapse"][aria-expanded="true"] i.fa:before{
+		content:"\f0d8";
+	}
+
+	.line{
+		padding-bottom:0.5rem;
+		position:relative;
+	}
+
+	button.search{
+		position:relative;
+	}
+
+	.popover{
+		width:30em;
+		height:5.5em;
+		top:-5.5em;
+	}
+}
+
+/*--------------------------------------------------------------------------------
+	index main table
+--------------------------------------------------------------------------------*/
+table.table tbody td.link{
+	text-align:center;
+	vertical-align:middle;
+	padding:0.3rem;
+	a.btn{
+
+		padding:0.2rem 0.1rem 0.1rem 0.1rem;
+		vertical-align:middle;
+		i.fa{
+			font-size:100%;
+		}
+
+		$bg1 : #ffffff;
+		$bg2 : #ebebeb;
+		$bg3 : #dbdbdb;
+		$bg4 : #b5b5b5;
+
+		@mixin grad( $bg1 , $bg2 , $bg3 , $bg4 ){
+			background: -moz-linear-gradient(
+				top,
+				$bg1 0%,
+				$bg2 70%,
+				$bg3 70%,
+				$bg4);
+			background: -webkit-gradient(
+				linear, left top, left bottom,
+				from($bg1),
+				color-stop(0.70, $bg2),
+				color-stop(0.70, $bg3),
+				to($bg4));
+		}
+
+		@include grad( $bg1 , $bg2 , $bg3 , $bg4 );
+
+
+		color: #050505;
+
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+		border: 1px solid #949494;
+		-moz-box-shadow:
+			0px 1px 3px rgba(000,000,000,0.5),
+			inset 0px 0px 2px rgba(255,255,255,1);
+		-webkit-box-shadow:
+			0px 1px 3px rgba(000,000,000,0.5),
+			inset 0px 0px 2px rgba(255,255,255,1);
+		box-shadow:
+			0px 1px 3px rgba(000,000,000,0.5),
+			inset 0px 0px 2px rgba(255,255,255,1);
+		text-shadow:
+			0px -1px 0px rgba(000,000,000,0.2),
+			0px 1px 0px rgba(255,255,255,1);
+
+
+		&:hover{
+			$bgh1 : lighten( $bg1 , 20% );
+			$bgh2 : lighten( $bg2 , 20% );
+			$bgh3 : lighten( $bg3 , 20% );
+			$bgh4 : lighten( $bg4 , 20% );
+
+			@include grad( $bgh1 , $bgh2 , $bgh3 , $bgh4 );
+		}
+		/*		
+				color:$link-color;
+				border-color:$link-color;
+				&:hover{
+					color:white;
+					background-color:$link-color;
+				}
+		*/
+	}
+
+	&.link-full a.btn{
+		display:block;
+		width:auto;
+		height:100%;
+		margin:0.125rem;
+	}
+}
+
+.panel.under-tab{
+	border-top:none;
+	border-top-left-radius:0;
+}
+
+
+table.table tbody tr td.no-padding{
+	padding:0;
+}
+
+
+table.table-index{
+	margin-bottom:0;
+	thead{
+		background-color:white;
+		th{
+			text-align:center;
+			&.thin{
+				padding-left:0;
+				padding-right:0;
+			}
+		}
+	}
+
+	tbody td{
+
+
+		i.fa{
+			font-size:150%;
+		}
+		.text{
+			white-space:nowrap;
+		}
+
+		&.data,
+		&.flag:not(.uneditable){
+			cursor:pointer;
+		}
+
+		&.data{
+			position:relative;
+
+			@mixin setWidth( $width ){
+				width:$width;
+				margin-left: -0.5 * $width;
+			}
+
+			overflow:visible;
+
+			.edit-popup{
+				@include setWidth( 40rem );
+				display:none;
+				position:absolute;
+				top:40px;
+				left:50%;
+				z-index:$z-index-edit-popup;
+				max-width:none;
+
+				&[key="date"]{	@include setWidth( 36rem );	}
+				&[key="time"]{	@include setWidth( 24rem );	}
+			}
+			&.editing .edit-popup{
+				display:block;
+			}
+		}
+
+		.text{
+			width:100%;
+			overflow: hidden;
+			-o-text-overflow: ellipsis;
+			text-overflow: ellipsis;		
+		}
+	}
+}
+
+/*--------------------------------------------------------------------------------
+	view
+--------------------------------------------------------------------------------*/
+.panel.view table.table{
+	margin-bottom:0;
+}
+
+/*--------------------------------------------------------------------------------
+	view-sales
+--------------------------------------------------------------------------------*/
+.device-pc .comments{
+	.pop-wrap{
+		position:relative;
+	}
+
+	ul.comment-tree{
+		list-style:none;
+		padding-left:0;
+		.popover{
+			margin-left:2rem;
+		}
+	}
+
+	.panel:not([comment_id="root"]){
+		display:none;
+	}
+	.children{
+		padding-left:2rem;
+	}
+
+	.popover{
+		position:relative;
+		margin-left:3px;
+		margin-right:60px;
+		display:block;
+		max-width:none;
+		box-shadow:none;
+		margin-bottom:.2rem;
+		min-height:4rem
+	}
+	input[type="checkbox"]{
+		position:absolute;
+		top:10px;
+		left:0;
+	}
+	.face{
+		img{
+			position:absolute;
+			bottom:0;
+			right:0;
+		}
+	}
+}
+/*--------------------------------------------------------------------------------
+	mobile view-sales
+--------------------------------------------------------------------------------*/
+
+body.device-mobile .comments{
+	tr.comment-form{
+		display:none;
+	}
+
+	tr.comment-form[comment_id='']{
+		display:table-row;
+	}
+}
+
+.panel.view-sale-card{
+	.panel-heading,
+	.panel-body,
+	.panel-footer{
+		padding:0.25rem;
+	}
+
+	.panel-body table.table th{
+		border-top:none;
+	}
+
+	.dropup .dropdown-menu li{
+		font-size:$sp-menu-font-size;
+	}
+
+	.card-ex{
+		display:none;
+		&.active{
+			display:block;
+		}
+	}
+}
+table.view-sale-card-previous{
+	margin-bottom:0;
+}
+.view-sale-card-comments{
+	td.check{
+		width:24px;
+	}
+	td.face{
+		width:32px;
+	}
+	margin-bottom:0;
+}
+
+
+/*--------------------------------------------------------------------------------
+	edit
+--------------------------------------------------------------------------------*/
+.panel-body.panel-body-padding2{
+	padding:1rem;
+}
+
+.panel.edit{
+	.input-group-addon{
+		cursor:pointer;
+	}
+	.panel-body{
+		padding-bottom:0;
+	}
+
+	.form-group{
+		&.text,
+		&.date,
+		&.time{
+			margin-bottom:0;
+			ul.list-inline{
+				margin-bottom:0;
+			}
+		}
+	}
+
+	@media( max-width:1200px){
+		.form-group{
+			margin-bottom:1rem;
+		}
+	}
+
+	div.separator{
+		margin-bottom:1rem;
+	}
+
+
+	>.form-horizontal>.form-group{
+		&:not(:last-child):after{
+			content:'';
+			position:relative;
+			display:block;
+			width:100%;
+			top:7px;
+			border-bottom:1px solid lightgray;
+			@media(max-width:1200px) {
+				top:5px;
+			}
+		}
+	}
+
+	.panel-body{
+		padding-bottom:0;
+	}
+
+	.form-group.date,
+	.form-group.time{
+		margin-bottom:0;
+		display:inline-block;
+		margin-left:0;
+		margin-right:0;
+		ul.list-inline{
+			margin-bottom:0;
+		}
+	}	
+}
+
+/*--------------------------------------------------------------------------------
+	home
+--------------------------------------------------------------------------------*/
+table.table-home{
+	i.fa{
+		font-size:150%;
+	}
+}
+/*--------------------------------------------------------------------------------
+	collections schedules
+--------------------------------------------------------------------------------*/
+body.controller-collections.action-schedules{
+	.panel{
+		margin-bottom:0.5rem;
+	}
+
+	.table.table{
+		margin-bottom:0;
+	}
+
+	.table.table-bordered{
+		>thead>tr>td,
+		>thead>tr>th{
+			border-bottom-width:0;
+		}
+	}
+}
+
+/*--------------------------------------------------------------------------------
+	mypage results
+--------------------------------------------------------------------------------*/
+
+div.progress{
+	margin-bottom:0;
+}
+/*--------------------------------------------------------------------------------
+	collections directmails
+--------------------------------------------------------------------------------*/
+body.action-direct_mails{
+	table.table {
+		tbody,thead{
+			tr{
+				td.chart{
+				padding:0.2rem 0.4rem 0;
+				background-color:inherit;
+				}
+				td.dm-label{
+					padding-top:0;
+					padding-bottom:0;
+				}
+			}
+		}
+		margin-bottom:0;
+	}
+	
+	.panel.panel-primary.panel-dm{
+		margin-bottom:1rem;
+	}
+}
