@@ -8,7 +8,7 @@
 					?>
 					<div class="col-xs-6 col-sm-4 text-center">
 						<a href="<?= $link['url'][0] ?>">
-							<img src='<?= $this->Url->build(sprintf("/img/icon%02d", $id * 10 + 11)) ?>' class="img-responsive center-block"/>
+							<img src='<?= $this->Url->build(sprintf("/img/icon%02d.png", $id * 10 + 11)) ?>' class="img-responsive center-block"/>
 							<p class="text-center">
 								<?= $link['label'] ?><br>
 								学習者
@@ -17,7 +17,7 @@
 					</div>
 					<div class="col-xs-6 col-sm-4 text-center">
 						<a href="<?= $link['url'][1] ?>" class="">
-							<img src='<?= $this->Url->build(sprintf("/img/icon%02d", $id * 10 + 12)) ?>' class="img-responsive center-block"/>
+							<img src='<?= $this->Url->build(sprintf("/img/icon%02d.png", $id * 10 + 12)) ?>' class="img-responsive center-block"/>
 							<p class="text-center">
 								<?= $link['label'] ?><br>
 								管理者
