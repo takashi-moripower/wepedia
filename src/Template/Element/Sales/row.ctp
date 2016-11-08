@@ -108,7 +108,7 @@ $cells = [
 	[
 		'key' => 'charge_person',
 		'text' => h($item->charge_person),
-		'class' => 'data trim16',
+		'class' => 'data trim8',
 	],
 	[
 		'key' => 'title',
