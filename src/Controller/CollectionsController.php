@@ -94,7 +94,6 @@ class CollectionsController extends AppController {
 				'end' => $date_default,
 			],
 		];
-
 		//	各種パラメータによる絞り込み
 		$search_param = $this->request->data + $search_default;
 

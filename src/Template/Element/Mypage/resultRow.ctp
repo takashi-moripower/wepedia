@@ -29,24 +29,27 @@ foreach( ['total','exist','new'] as $key ){
 <tr item_id="<?= $item->id ?>">
 	<?php
 	foreach ($cells as $cell):
+		//	cellがkey値のみの簡易設定だった場合
 		if (is_string($cell)) {
 			$cell = [
 				'key' => $cell,
 				'class' => 'data text-right',
 			];
 
+			//	item->keyが存在しなかった場合　item->sum_keyを参照する
 			if (!isset($item->{$cell['key']})) {
 				$cell['key'] = 'sum_' . $cell['key'];
 			}
 			
-			if( strpos( $cell['key'] , 'rate' ) === false ){
-				if( is_numeric(  $cell['key']) ){
-					$cell['text'] = number_format( $item->{$cell['key']} );
-				}else{
-					$cell['text'] = $item->{$cell['key']};
-				}
-			}else{
+			if( strpos( $cell['key'] , 'rate' )){
+				//	keyが*rateだった場合　%表示
 				$cell['text'] = sprintf('%0.1f', $item->{$cell['key']} * 100) . '%';
+			}else if( $cell['key'] == 'date'){
+				//	keyがdateだった場合　そのまま
+				$cell['text'] = $item->{$cell['key']};
+			}else{
+				//	3桁区切り
+				$cell['text'] = number_format( $item->{$cell['key']} );
 			}
 		}
 		?>

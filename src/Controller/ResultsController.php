@@ -19,6 +19,7 @@ class ResultsController extends AppController {
 		'id',
 		'user_name',
 		'date',
+		'type',
 		'target_new',
 		'target_exist',
 		'previous_new',
@@ -55,34 +56,35 @@ class ResultsController extends AppController {
 	}
 	
 	public function export(){
-		$start = $this->Results->find()
+		
+		$form = new \App\Form\ResultExportForm();
+		
+		$form->start = $this->Results->find()
 				->order(['date'=>'ASC'])
 				->first()
 				->date;
-		$end = $this->Results->find()
+		$form->end = $this->Results->find()
 				->order(['date'=>'DESC'])
 				->first()
 				->date;
 		
-		
+
 		if( $this->request->is('post')){
-			$start_form = $this->request->data['start'];
-			$end_form = $this->request->data['end'];
-			$start_date = new \Cake\I18n\Date( $start_form['year'].'-'.$start_form['month'].'-'.$start_form['day'] );
-			$end_date = new \Cake\I18n\Date( $end_form['year'].'-'.$end_form['month'].'-'.$end_form['day'] );
 			
+			$form->execute( $this->request->data );
+
 			$query = $this->Results->find()
 					->contain('Users')
-					->where(['date >=' => $start , 'date <=' => $end ]);
+					->where(['date >=' => $form->start , 'date <=' => $form->end ]);
 
 			$data = $this->Results->getCSV( $query , $this->columns );
 			return $this->_downloadCSVFile($data);
 		}
 		
-		$this->set(compact('start','end'));
+		
+		$this->set('form',$form);
 	}
 	
-	public function debug(){
-		return $this->_downloadFile('sample.txt','txt','123');
-	}
+
+
 }

@@ -160,7 +160,6 @@ use \App\Model\Table\Traits\DateAroundTrait;
 	public function findDate(Query $query, array $options) {
 
 		$date = self::filterDate(Hash::get($options, 'date'));
-
 		$query->where([
 			'date >=' => $date['start'],
 			'date <=' => $date['end'],
