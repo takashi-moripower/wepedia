@@ -1,11 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
@@ -42,13 +35,15 @@ class DirectMailComponent extends Component {
 		$this->_user = $this->Users->get($user_id);
 
 		if (empty($date_string)) {
-			$date = $this->Sales
-							->find('Flags', ['flags' => 'normal'])
-							->where(['project_do' => Defines::SALES_DO_DIRECTMAIL])
-							->where(['user_id'=>$user_id])
-							->order(['date' => 'DESC'])
-							->select(['date'])
-							->first()->date;
+			$first = $this->Sales
+					->find('Flags', ['flags' => 'normal'])
+					->where(['project_do' => Defines::SALES_DO_DIRECTMAIL])
+					->where(['user_id' => $user_id])
+					->order(['date' => 'DESC'])
+					->select(['date'])
+					->first();
+			
+			$date = empty($first) ? '' : $first->date();
 		} else {
 			$date = new Date($date_string);
 		}
@@ -61,23 +56,23 @@ class DirectMailComponent extends Component {
 			'date' => $date,
 				])
 		;
-		
-		$collection = new \App\Model\Entity\Collections\DirectmailCollection( $sales );
+
+		$collection = new \App\Model\Entity\Collections\DirectmailCollection($sales);
 
 		//	日付選択肢
 		$dm_date = $this->Sales->find('DmDate')
 				->where(['user_id' => $user_id])
-				->toArray();		
-		
+				->toArray();
+
 		$date_options = [];
-		foreach( $dm_date as $d ){
-			$date_options[ $d->date->format('Y-m-d') ] = $d->label;
+		foreach ($dm_date as $d) {
+			$date_options[$d->date->format('Y-m-d')] = $d->label;
 		}
-				
+
 		$this->_controller->set('date_options', $date_options);
 
 		$this->_controller->set('user', $this->_user);
-		$this->_controller->set(compact('sales', 'date' , 'collection' ));
+		$this->_controller->set(compact('sales', 'date', 'collection'));
 	}
 
 	//DMの最終発送日

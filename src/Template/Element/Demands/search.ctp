@@ -51,6 +51,7 @@ $list_selectors = [
 		<?php endforeach ?>
 	</div>
 	<div class="line">
+		<?= $this->Form->text('freeword', ['placeHolder' => 'フリーワード検索', 'class' => '']) ?>
 		<button type="submit" class="btn btn-default" name="action" value="export">エクスポート</button>
 	</div>
 </div>

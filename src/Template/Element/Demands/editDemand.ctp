@@ -1,12 +1,10 @@
 <?php
+use Cake\Core\Configure;
+
 $template_date = '<ul class="list-inline"><li class="year">{{year}}</li><li>年</li><div class="separator hidden-lg"></div><li class="month">{{month}}</li><li>月</li><li class="day">{{day}}</li><li>日</li></ul>';
 $template_time = '<ul class="list-inline"><li class="hour">{{hour}}</li><li>時</li><li class="minute">{{minute}}</li><li>分</li></ul>';
 
-$TYPE = \Cake\Core\Configure::read('demand.type');
-$option_types = array_combine($TYPE, $TYPE);
-$cat = $name_categories->toArray() + ['複合'];
-$option_categories = array_combine($cat, $cat);
-
+$option_types = array_combine(Configure::read('demand.type'), Configure::read('demand.type'));
 $panel_class = \Cake\Core\Configure::read('Flags.Class')[$demand->flags];
 if ($demand->flags != 'normal') {
 	$flag_name = '(' . \Cake\Core\Configure::read('Flags.Name')[$demand->flags] . ')';
@@ -30,24 +28,9 @@ if ($demand->flags != 'normal') {
 			</div>
 		</div>		
 		<div class="form-group">
-			<label for="agent_id" class="col-xs-8 col-lg-4 control-label">要望区分</label>
+			<label for="type" class="col-xs-8 col-lg-4 control-label">要望区分</label>
 			<div class="col-xs-16 col-lg-20">
 				<?= $this->Form->select('type', $option_types) ?>
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="agent_id" class="col-xs-8 col-lg-4 control-label">商品区分</label>
-			<div class="col-xs-16 col-lg-20">
-				<?= $this->Form->select('product_category', $option_categories) ?>
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="agent_id" class="col-xs-8 col-lg-4 control-label">商品名</label>
-			<div class="col-xs-16 col-lg-20">
-				<div class="input-group" style="width:100%">
-					<?= $this->Form->text('product_name') ?>
-					<div class="input-group-addon" name="product_name">...</div>
-				</div>			
 			</div>
 		</div>
 		<div class="form-group">
@@ -56,6 +39,18 @@ if ($demand->flags != 'normal') {
 				<?= $this->Form->textArea('demand') ?>
 			</div>
 		</div>		
+		<div class="form-group">
+			<label for="product_name" class="col-xs-8 col-lg-4 control-label">商品名</label>
+			<div class="col-xs-16 col-lg-20">
+				<div class="input-group" style="width:100%">
+					<?= $this->Form->text('product_name', ['readonly' => 'readonly', 'style' => 'background-color:transparent;']) ?>
+					<div class="input-group-addon" name="product_name">編集</div>
+				</div>			
+			</div>
+		</div>
+		<div class="form-group collapse" id="product_selector">
+			<?= $this->Element('Demands/productSelector') ?>
+		</div>
 	</div>
 </div>
 <?= $this->Form->end() ?>
@@ -72,32 +67,10 @@ foreach ($list_products as $product) {
 	var CATEGORIES = <?= $this->Json->safeEncode($categories) ?>;
 
 	$(function () {
-		$('input[name="product_name"]').autocomplete({
-			source: CATEGORIES['all'],
-			autoFocus: true,
-			delay: 500,
-			minLength: 0
-		});
-
-		$('select[name="product_category"]').on({
-			change: function () {
-				cat = $(this).val();
-				console.log(cat);
-				source = CATEGORIES['all'];
-				for (key in CATEGORIES) {
-					if (key == cat) {
-						source = CATEGORIES[key];
-					}
-				}
-				$('input[name="product_name"]').autocomplete("option", {source: source});
-			}
-		});
 
 		$('.input-group-addon[name="product_name"]').on({
 			click: function () {
-				obj = $('input[name="product_name"]');
-				obj.autocomplete('search', '');
-				obj.focus();
+				$('#product_selector').collapse('toggle');
 			}
 		});
 	});

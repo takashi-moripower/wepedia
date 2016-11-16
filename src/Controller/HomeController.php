@@ -56,7 +56,7 @@ class HomeController extends AppController {
 		 */
 		$query_demands = $table_demands->find('read', ['read' => 0])
 				->find('flags', ['flags' => 'normal'])
-				->contain(['Users' => ['fields' => ['name']], 'AnswerUsers' => ['fields' => ['name']]])
+				->contain(['Users' => ['fields' => ['name']], ])
 				->order(['date' => 'DESC']);
 
 		$count_demands = $query_demands->count();

@@ -105,10 +105,8 @@ $cells = [
 				<?= $cell['text'] ?>
 			</div>
 			<?php
-			switch ($cell['class']) {
-				case'data':
-					echo $this->Element('Sales/popupEdit', ['key' => $cell['key'], 'item' => $item]);
-					break;
+			if (strpos($cell['class'], 'data') !== false) {
+				echo $this->Element('Sales/popupEdit', ['key' => $cell['key'], 'item' => $item]);
 			}
 			?>
 		</td>

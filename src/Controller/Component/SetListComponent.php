@@ -70,7 +70,9 @@ class SetListComponent extends Component {
 				->order(['category_order' => 'ASC', 'category' => 'ASC'])
 				->group('category');
 
-		$name_products = $table_products->find('list', ['keyField' => 'id', 'valueField' => 'name']);
+		$name_products = $table_products->find('list', ['keyField' => 'id', 'valueField' => 'name'])
+				->order(['category_order' => 'ASC', 'category' => 'ASC', 'product_order' => 'ASC', 'name' => 'ASC']);
+
 		$list_products = $table_products->find()
 				->order(['category_order' => 'ASC', 'category' => 'ASC', 'product_order' => 'ASC', 'name' => 'ASC']);
 

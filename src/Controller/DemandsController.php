@@ -117,9 +117,9 @@ class DemandsController extends AppController {
 		$query->group('Demands.id')
 				->contain([
 					'Users' => ['fields' => ['name', 'face']],
-					'AnswerUsers' => ['fields' => ['name', 'face']],
-					'Products' => ['fields' => ['name', 'category', 'user_id']],
-					'Products.Users' => ['fields' => ['name', 'face', 'id']],
+//					'AnswerUsers' => ['fields' => ['name', 'face']],
+//					'Products' => ['fields' => ['name', 'category', 'user_id']],
+//					'Products.Users' => ['fields' => ['name', 'face', 'id']],
 					'UnreadDemands' => ['fields' => ['user_id'], 'conditions' => ['UnreadDemands.user_id' => $loginuser_id]],
 		]);
 
@@ -283,6 +283,16 @@ class DemandsController extends AppController {
 		}
 		$this->Flash->success('顧客の声データをゴミ箱へ移動しました');
 		return $this->redirect(['controller' => 'demands', 'action' => 'draft', 'clear' => true]);
+	}
+	
+	
+	public function debug(){
+				
+		$data = $this->Demands->find('Produce',['user_id'=>[7]])
+				->toArray();
+		
+		$this->set('data',$data);
+		return $this->render('/Common/debug');
 	}
 
 }

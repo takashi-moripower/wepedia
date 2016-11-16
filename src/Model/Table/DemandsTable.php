@@ -19,12 +19,10 @@ use Cake\Network\Session;
  * @property \Cake\ORM\Association\BelongsTo $Users
  * @property \Cake\ORM\Association\BelongsTo $Clients
  * @property \Cake\ORM\Association\BelongsTo $Products
- * @property \Cake\ORM\Association\BelongsToMany $Users
  */
 class DemandsTable extends Table {
 
-	use 
-	 FlagsTrait,
+	use FlagsTrait,
 	 LoginUserTrait;
 
 	/**
@@ -45,32 +43,32 @@ class DemandsTable extends Table {
 		$this->belongsTo('Users', [
 			'foreignKey' => 'user_id'
 		]);
+		/*
+		  $this->belongsTo('AnswerUsers', [
+		  'className' => 'Users',
+		  'foreignKey' => 'answer_id',
+		  'bindingKey' => 'id',
+		  'propertyName' => 'answer_user',
+		  ]);
 
-		$this->belongsTo('AnswerUsers', [
-			'className' => 'Users',
-			'foreignKey' => 'answer_id',
-			'bindingKey' => 'id',
-			'propertyName' => 'answer_user',
-		]);
-
-		$this->belongsTo('Products', [
-			'className' => 'Products',
-			'foreignKey' => 'product_name',
-			'bindingKey' => 'name',
-			'propertyName' => 'product',
-		]);
-
+		  $this->belongsTo('Products', [
+		  'className' => 'Products',
+		  'foreignKey' => 'product_name',
+		  'bindingKey' => 'name',
+		  'propertyName' => 'product',
+		  ]);
+		 */
 		$this->belongsTo('Sales', [
 			'foreignKey' => 'sale_id',
 		]);
 
 		$this->hasOne('UnreadDemands', [
 			'foreignKey' => 'demand_id',
-			'condition' => [ 'user_id' => $this->_getLoginUserId()],
+			'condition' => ['user_id' => $this->_getLoginUserId()],
 			'joinType' => 'LEFT',
 		]);
-		
-		$this->eventManager()->on('Model.Import.beforeImport' , [$this,'beforeImport']);		
+
+		$this->eventManager()->on('Model.Import.beforeImport', [$this, 'beforeImport']);
 	}
 
 	/**
@@ -182,24 +180,57 @@ class DemandsTable extends Table {
 			return $query;
 		}
 
+		$produce = $query->cleanCopy()
+				->find('Produce', ['user_id' => $user_id])
+				->select('id');
+
 		$query
-				->where(['Demands.user_id IN' => $user_id]);
+				->where(['or' => ['Demands.id IN' => $produce, 'Demands.user_id IN' => $user_id]]);
+		
+		return $query;
+	}
+
+	/**
+	 * usre_idの配列を受け取り　開発担当した商品に関する要望を返す
+	 * @param Query $query
+	 * @param array $options
+	 * @return Query
+	 */
+	public function findProduce(Query $query, array $options) {
+		$user_id = $options['user_id'];
+		$table_products = TableRegistry::get('Products');
+		$products = $table_products->find()
+				->where(['Products.user_id in' => $user_id])
+				->select('name');
+
+		if ($products->isEmpty()) {
+			return $query->where('false');
+		}
+
+		$n = [];
+		foreach ($products as $product) {
+			$n[] = ['product_name like'=> "%{$product->name}%"];
+		}
+		
+		$query->where([ 'or'=> $n] );
+
 		return $query;
 	}
 
 	public function searchConfiguration() {
 		$search = new Manager($this);
 		$search
-				->finder('flags', [ 'finder' => 'Flags'])
-				->finder('read', [ 'finder' => 'Read'])
-				->finder('date', [ 'finder' => 'Date'])
-				->finder('user_id', [ 'finder' => 'UsersJson'])
+				->finder('flags', ['finder' => 'Flags'])
+				->finder('read', ['finder' => 'Read'])
+				->finder('date', ['finder' => 'Date'])
+				->finder('user_id', ['finder' => 'UsersJson'])
+				->like('freeword', ['before' => true, 'after' => true, 'field' => [$this->aliasField('client_name'), $this->aliasField('product_category'), $this->aliasField('product_name'), $this->aliasField('demand'),]])
 				->like('client_name', ['before' => true, 'after' => true, 'field' => [$this->aliasField('client_name')]])
-				->value('boss_check', [ 'field' => 'boss_check'])
-				->value('boss_check2', [ 'field' => 'boss_check2'])
-				->value('result', [ 'field' => 'result'])
-				->value('type', [ 'field' => 'type'])
-				->value('product_category', [ 'field' => 'product_category'])
+				->like('product_category', ['before' => true, 'after' => true, 'field' => [$this->aliasField('product_category')]])
+				->value('boss_check', ['field' => 'boss_check'])
+				->value('boss_check2', ['field' => 'boss_check2'])
+				->value('result', ['field' => 'result'])
+				->value('type', ['field' => 'type'])
 		;
 		return $search;
 	}
@@ -211,7 +242,7 @@ class DemandsTable extends Table {
 
 		$table_s = TableRegistry::get('Sales');
 		$root = $table_s->get($root_id);
-		
+
 		$latest = $root->latest;
 
 		$demand = $this->newEntity([
@@ -219,17 +250,17 @@ class DemandsTable extends Table {
 			'flags' => 'normal',
 			'client_name' => $root->client_name,
 			'sale_id' => $root->id,
-			'date'=>$latest->date,
-			'time'=>$latest->time,
+			'date' => $latest->date,
+			'time' => $latest->time,
 		]);
 
 		return $demand;
 	}
-	
-	public function beforeImport( $event ){
+
+	public function beforeImport($event) {
 		$demand = $event->subject();
-		
-		if( !isset( $demand->published ) ){
+
+		if (!isset($demand->published)) {
 			$demand->published = true;
 			$demand->deleted = false;
 		}

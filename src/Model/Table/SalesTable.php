@@ -21,7 +21,6 @@ use App\Defines\Defines;
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
  * @property \Cake\ORM\Association\BelongsTo $Clients
- * @property \Cake\ORM\Association\BelongsToMany $Users
  */
 class SalesTable extends Table {
 

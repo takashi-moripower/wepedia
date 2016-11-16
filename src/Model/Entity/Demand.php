@@ -97,4 +97,23 @@ class Demand extends Entity {
 		$this->sale = $sale;
 		return $sale;
 	}
+	
+	protected function _setProductName( $value ){
+		
+		if( empty( $value )){
+			return $value;
+		}
+		
+		$table_products = TableRegistry::get('Products');
+		$names = explode(',',$value);
+		
+		$products = $table_products->find('list',['valueField'=>'category'])
+				->where(['name in' => $names])
+				->group(['category'])
+				->toArray();
+				
+		$this->product_category =  implode(',',$products);
+		
+		return $value;
+	}
 }
