@@ -4,13 +4,14 @@ $selected_products = explode(',', $demand->product_name);
 
 
 <div class="product-selector">
-	<div class="col-xs-8">
+	<div class="col-xs-24 col-lg-8">
 		<div class="category-name active selected-item">選択済み</div>
 		<?php foreach ($name_categories as $category): ?>
 			<div class="category-name" category_name="<?= $category ?>"><?= $category ?></div>
 		<?php endforeach ?>
 	</div>
-	<div class="col-xs-16">
+	<div class="separator hidden-lg col-xs-24"></div>
+	<div class="col-xs-24 col-lg-16">
 		<?php
 		foreach ($list_products as $product):
 			$is_selected = in_array($product->name, $selected_products);
@@ -36,14 +37,28 @@ $selected_products = explode(',', $demand->product_name);
 		font-family:'FontAwesome';
 		content:'\f114';
 		padding-right:.5rem;
+		font-size:1.25rem;
 	}
 	.product-selector .category-name.active:before{
-		font-family:'FontAwesome';
 		content:'\f115';
 	}
-
+	
+	.product-selector .category-name.selected-item:before{
+		content:'\f07b';
+	}
+	
+	.product-selector .category-name.selected-item.active:before{
+		content:'\f07c';
+	}
+	
 	.product-selector .product-name{
 		display:none;
+	}
+	
+	.product-selector .separator{
+		position:relative;
+		top:7px;
+		border-bottom:1px solid lightgray;
 	}
 </style>
 <?php $this->end() ?>
