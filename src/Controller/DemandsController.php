@@ -37,7 +37,8 @@ class DemandsController extends AppController {
 			'UnreadDemands.user_id'
 		],
 		'order' => [
-			'modified' => 'desc'
+			'date' => 'desc',
+			'time' => 'desc'
 		]
 	];
 	public $export_columns = [
