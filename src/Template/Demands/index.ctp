@@ -27,12 +27,6 @@ echo $this->Element('Demands/tab');
 		<thead>
 			<tr>
 				<th><?= $this->Paginator->sort('UnreadSales.user_id', '読') ?></th>
-				<?php if(false): ?>
-				<th>詳細</th>
-				<th><?= $this->Paginator->sort('boss_check', '部長') ?></th>
-				<th><?= $this->Paginator->sort('boss_check2', 'マネ') ?></th>
-				<th><?= $this->Paginator->sort('time', '時間') ?></th>
-				<?php endif ?>
 				<th><?= $this->Paginator->sort('user_name', '営業担当') ?></th>
 				<th><?= $this->Paginator->sort('date', '日にち') ?></th>
 				<th><?= $this->Paginator->sort('type', '要望区分') ?></th>
@@ -40,7 +34,7 @@ echo $this->Element('Demands/tab');
 				<th><?= $this->Paginator->sort('product_category', '商品区分') ?></th>
 				<th><?= $this->Paginator->sort('product_name', '商品名') ?></th>
 				<th><?= $this->Paginator->sort('demand', '要望内容') ?></th>
-				<th>編集</th>
+				<th>詳細/編集</th>
 			</tr>
 		</thead>
 		<tbody>
