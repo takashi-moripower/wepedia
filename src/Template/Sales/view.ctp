@@ -1,5 +1,7 @@
 <?php
+
 use App\Defines\Defines;
+
 $dd_id = $root->getDemandDraftId();
 ?>
 
@@ -12,9 +14,9 @@ $dd_id = $root->getDemandDraftId();
 	</div>
 	<div class="col-lg-12">
 		<h2>顧客の声</h2>
-		<?= $this->Element('Demands/viewList',['demands'=>$root->demands]) ?>
+		<?= $this->Element('Demands/viewList', ['demands' => $root->demands]) ?>
 		<div class="btn-group" role="group">
-			<?php  if( $dd_id ):?>
+			<?php if ($dd_id): ?>
 				<a href="<?= $this->Url->build(['controller' => 'demands', 'action' => 'edit', $dd_id]) ?>" class="btn btn-default">
 					顧客の声(下書き)を編集
 				</a>
@@ -25,13 +27,18 @@ $dd_id = $root->getDemandDraftId();
 			<?php endif ?>
 		</div>
 		<h2>評価</h2>
-		<?= $this->Element('Sales/evaluation',['root'=>$root,'latest'=>$root->latest]) ?>
-		<?= $this->Element('Sales/comments',['comments'=>$root->comments ]) ?>
+		<?= $this->Element('Sales/evaluation', ['root' => $root, 'latest' => $root->latest]) ?>
+		<?= $this->Element('Sales/comments', ['comments' => $root->comments]) ?>
 	</div>
 </div>
 <div class="text-center">
 	<div class="btn-group" role="group">
-		<a href="<?= $this->Url->build(['controller' => 'sales', 'action' => 'index', ]) ?>" class="btn btn-default">
+		<?php if (isset($prev_id)): ?>
+			<a href="<?= $this->Url->build(['controller' => 'sales', 'action' => 'view', $prev_id]) ?>" class="btn btn-default">
+				前の報告
+			</a>
+		<?php endif ?>
+		<a href="<?= $this->Url->build(['controller' => 'sales', 'action' => 'index',]) ?>" class="btn btn-default">
 			一覧に戻る
 		</a>
 		<?php if ($root->project_do == Defines::SALES_DO_DIRECTMAIL): ?>
@@ -39,5 +46,10 @@ $dd_id = $root->getDemandDraftId();
 				マイページに戻る
 			</a>
 		<?php endif; ?>
+		<?php if (isset($next_id)): ?>
+			<a href="<?= $this->Url->build(['controller' => 'sales', 'action' => 'view', $next_id]) ?>" class="btn btn-default">
+				次の報告
+			</a>
+		<?php endif ?>
 	</div>
 </div>

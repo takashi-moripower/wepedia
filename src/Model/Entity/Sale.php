@@ -64,27 +64,27 @@ class Sale extends Entity {
 	}
 
 	protected function _getRootId($value) {
-		
+
 		if ($value == NULL) {
 			$this->root_id = $this->id;
 			return $this->id;
 		}
 		return $value;
 	}
-	
-	
+
 	public function isRoot() {
-		if( $this->isNew() ){
-			return empty( $this->root_id );
+		if ($this->isNew()) {
+			return empty($this->root_id);
 		}
 		return ( $this->root_id == $this->id );
 	}
+
 	protected function _getRoot($value) {
 		if (!empty($value)) {
 			return $value;
 		}
 
-		if ( $this->isRoot() ) {
+		if ($this->isRoot()) {
 			return $this;
 		}
 
@@ -144,7 +144,6 @@ class Sale extends Entity {
 		}
 		return $value;
 	}
-	
 
 	/**
 	 * 過去の報告
@@ -239,29 +238,33 @@ class Sale extends Entity {
 		$comments = TableRegistry::get('Comments')
 				->getTree($this->root_id);
 		$this->comments = $comments;
-		
+
 		return $comments;
 	}
-	
-	protected function _getCountComments( $value ){
-		if( !empty( $value )){
+
+	protected function _getCountComments($value) {
+		if (!empty($value)) {
 			return $value;
 		}
-		
-		if( !$this->isRoot() ){
+
+		if (!$this->isRoot()) {
 			return $this->root->count_comments;
 		}
-		
+
 		$count = TableRegistry::get('Comments')
 				->find()
-				->where(['sale_id'=>$this->id])
+				->where(['sale_id' => $this->id])
 				->count();
-		
+
 		$this->count_comments = $count;
 		return $count;
-				
 	}
 
+	/**
+	 * フォロー状況の取得
+	 * @param type $value
+	 * @return SALES_FOLLOW_NO_FOLLOW / SALES_FOLLOW_FOLLOWING / SALES_FOLLOW_FINISHED
+	 */
 	protected function _getFollow($value) {
 		if (!empty($value)) {
 			return $value;
@@ -273,7 +276,7 @@ class Sale extends Entity {
 
 		if ($this->child_id == NULL) {
 			$follow = Defines::SALES_FOLLOW_NO_FOLLOW;
-		} else if ( !empty($this->latest) && $this->latest->result == Defines::SALES_RESULT_FOLLOWING) {
+		} else if (!empty($this->latest) && $this->latest->result == Defines::SALES_RESULT_FOLLOWING) {
 			$follow = Defines::SALES_FOLLOW_FOLLOWING;
 		} else {
 			$follow = Defines::SALES_FOLLOW_FINISHED;
@@ -284,6 +287,11 @@ class Sale extends Entity {
 		return $follow;
 	}
 
+	/**
+	 * 自身が集合データの時のみ利用可能、統計を返す
+	 * @param type $value
+	 * @return FollowsCollection
+	 */
 	protected function _getFollowsCollection($value) {
 		if (!empty($value)) {
 			return $value;
@@ -297,6 +305,52 @@ class Sale extends Entity {
 		$this->follows_collection = $collection;
 
 		return $collection;
+	}
+
+	protected function _getPrevId() {
+		$table = TableRegistry::get('Sales');
+		$entity = $table->find('flags', ['flags' => $this->flags])
+				->where(
+						[
+							'or' => [
+									['date <' => $this->date],
+									['date' => $this->date, 'time <' => $this->time],
+							]
+						]
+				)
+				->where(['child_id is' => NULL])
+				->order(['date' => 'desc', 'time' => 'desc'])
+				->first()
+		;
+
+		if ($entity) {
+			return $entity->root_id;
+		} else {
+			return NULL;
+		}
+	}
+
+	protected function _getNextId() {
+		$table = TableRegistry::get('Sales');
+		$entity = $table->find('flags', ['flags' => $this->flags])
+				->where(
+						[
+							'or' => [
+									['date >' => $this->date],
+									['date' => $this->date, 'time >' => $this->time],
+							]
+						]
+				)
+				->where(['child_id is' => NULL])
+				->order(['date' => 'asc', 'time' => 'asc'])
+				->first()
+		;
+
+		if ($entity) {
+			return $entity->root_id;
+		} else {
+			return NULL;
+		}
 	}
 
 }

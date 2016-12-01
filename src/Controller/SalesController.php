@@ -109,7 +109,7 @@ class SalesController extends AppController {
 		];
 
 		if (!$this->isAdmin()) {
-			$search_default['user_id'] = json_encode([ $this->getLoginUser()['id']]);
+			$search_default['user_id'] = json_encode([$this->getLoginUser()['id']]);
 		}
 
 		return $this->_desktopIndex($search_default);
@@ -120,9 +120,9 @@ class SalesController extends AppController {
 			'flags' => 'deleted',
 			'limit' => 20
 		];
-		
+
 		if (!$this->isAdmin()) {
-			$search_default['user_id'] = json_encode([ $this->getLoginUser()['id']]);
+			$search_default['user_id'] = json_encode([$this->getLoginUser()['id']]);
 		}
 
 		return $this->_desktopIndex($search_default);
@@ -228,8 +228,11 @@ class SalesController extends AppController {
 		foreach ($root->previous as $node) {
 			$node->read = true;
 		}
+		
+		$next_id = $root->next_id;
+		$prev_id = $root->prev_id;
 
-		$this->set(compact(['root']));
+		$this->set(compact(['root' , 'next_id' , 'prev_id' ]));
 	}
 
 	public function add($root_id = NULL) {
@@ -389,62 +392,59 @@ class SalesController extends AppController {
 
 	public function deleteComplete($id) {
 		$entity = $this->Sales->get($id);
-		
+
 		if ($entity->flags != 'deleted') {
 			$this->Flash->error('不正な入力');
 			return $this->redirect(['controller' => 'sales', 'action' => 'trashbox', 'clear' => true]);
 		}
-		
-		$this->Sales->delete( $entity );
+
+		$this->Sales->delete($entity);
 		$this->Flash->success('営業報告データを完全に削除しました');
 		return $this->redirect(['controller' => 'sales', 'action' => 'trashbox', 'clear' => true]);
-		
-		
 	}
-	
-	public function deleteNodesComplete( $json_ids ){
-		$ids = json_decode( $json_ids );
+
+	public function deleteNodesComplete($json_ids) {
+		$ids = json_decode($json_ids);
 		$table = $this->Sales;
-		foreach( $ids as $id ){
-			$entity = $table->get( $id );
-			$table->delete( $entity );
+		foreach ($ids as $id) {
+			$entity = $table->get($id);
+			$table->delete($entity);
 		}
 		$this->Flash->success('営業報告データを完全に削除しました');
 		return $this->redirect(['controller' => 'sales', 'action' => 'trashbox', 'clear' => true]);
 	}
-	
-	public function deleteNodes( $json_ids ){
-		$ids = json_decode( $json_ids );
+
+	public function deleteNodes($json_ids) {
+		$ids = json_decode($json_ids);
 		$table = $this->Sales;
-		foreach( $ids as $id ){
-			$entity = $table->get( $id );
+		foreach ($ids as $id) {
+			$entity = $table->get($id);
 			$entity->flags = 'deleted';
-			$table->save( $entity );
+			$table->save($entity);
 		}
 		$this->Flash->success('営業報告データをゴミ箱へ移動しました');
 		return $this->redirect(['controller' => 'sales', 'action' => 'draft', 'clear' => true]);
 	}
-	
-	public function emptyTrash(){
+
+	public function emptyTrash() {
 		$this->viewBuilder()->layout('management');
-		
-		if( !$this->request->is('post') ){
+
+		if (!$this->request->is('post')) {
 			return $this->render('/Common/emptyTrash');
 		}
-		
-		if( !$this->request->data['code'] != !$this->request->data['code2']){
+
+		if (!$this->request->data['code'] != !$this->request->data['code2']) {
 			$this->Flash->error('不正なコード');
 			return $this->render('/Common/emptyTrash');
 		}
-		
-		$items = $this->Sales->find('flags',['flags'=>'deleted']);
-		foreach( $items as $item ){
-			$this->Sales->delete( $item );
+
+		$items = $this->Sales->find('flags', ['flags' => 'deleted']);
+		foreach ($items as $item) {
+			$this->Sales->delete($item);
 		}
-		
+
 		$this->Flash->success('ゴミ箱の中のデータをすべて削除しました');
 		return $this->render('/Common/emptyTrash');
 	}
-	
-	
+
 }
