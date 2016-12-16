@@ -90,11 +90,19 @@ class SalesController extends AppController {
 		$this->import_columns = $this->export_columns;
 	}
 
+	/**
+	 * 検索条件初期化ののち一覧へ
+	 * @return type
+	 */
 	public function clear() {
 		$this->Search->clear();
 		return $this->redirect(['action' => 'index']);
 	}
 
+	/**
+	 * 一覧表示（通常）
+	 * @return type
+	 */
 	public function index() {
 		return $this->_desktopIndex([
 					'flags' => 'normal',
@@ -102,6 +110,10 @@ class SalesController extends AppController {
 		]);
 	}
 
+	/**
+	 * 一覧表示（下書き）
+	 * @return type
+	 */
 	public function draft() {
 		$search_default = [
 			'flags' => 'unpublished',
@@ -115,6 +127,10 @@ class SalesController extends AppController {
 		return $this->_desktopIndex($search_default);
 	}
 
+	/**
+	 * 一覧表示(ゴミ箱)
+	 * @return type
+	 */
 	public function trashbox() {
 		$search_default = [
 			'flags' => 'deleted',
@@ -228,11 +244,11 @@ class SalesController extends AppController {
 		foreach ($root->previous as $node) {
 			$node->read = true;
 		}
-		
+
 		$next_id = $root->next_id;
 		$prev_id = $root->prev_id;
 
-		$this->set(compact(['root' , 'next_id' , 'prev_id' ]));
+		$this->set(compact(['root', 'next_id', 'prev_id']));
 	}
 
 	public function add($root_id = NULL) {
@@ -245,6 +261,11 @@ class SalesController extends AppController {
 		return $this->_edit($sale);
 	}
 
+	/**
+	 * add,edit 共通処理
+	 * @param type $sale
+	 * @return type
+	 */
 	protected function _edit($sale) {
 		$this->SetList->add(['MyClients', 'MyCharges', 'Users']);
 
@@ -390,6 +411,11 @@ class SalesController extends AppController {
 		$this->Import->import($this->import_columns);
 	}
 
+	/**
+	 * ゴミ箱から完全削除(単数）
+	 * @param type $id
+	 * @return type
+	 */
 	public function deleteComplete($id) {
 		$entity = $this->Sales->get($id);
 
@@ -403,6 +429,11 @@ class SalesController extends AppController {
 		return $this->redirect(['controller' => 'sales', 'action' => 'trashbox', 'clear' => true]);
 	}
 
+	/**
+	 * ゴミ箱から完全削除(複数）
+	 * @param type $json_ids
+	 * @return type
+	 */
 	public function deleteNodesComplete($json_ids) {
 		$ids = json_decode($json_ids);
 		$table = $this->Sales;
@@ -414,6 +445,11 @@ class SalesController extends AppController {
 		return $this->redirect(['controller' => 'sales', 'action' => 'trashbox', 'clear' => true]);
 	}
 
+	/**
+	 * ゴミ箱送り(複数）
+	 * @param type $json_ids
+	 * @return type
+	 */
 	public function deleteNodes($json_ids) {
 		$ids = json_decode($json_ids);
 		$table = $this->Sales;
@@ -445,6 +481,30 @@ class SalesController extends AppController {
 
 		$this->Flash->success('ゴミ箱の中のデータをすべて削除しました');
 		return $this->render('/Common/emptyTrash');
+	}
+
+	public function debug() {
+
+		$key = 'date';
+
+		$target = $this->Sales->get(2783, ['fields' => ['id', $key]]);
+
+
+		$prev = $this->Sales->find()
+				->where(
+						['or' => [
+									[$key . " >" => $target->{$key}],
+									[$key => $target->{$key}, 'id >' => $target->id]
+							]
+						]
+				)
+				->select(['id', $key])
+				->first();
+		;
+
+
+		$this->set('data', $prev);
+		$this->render('/Common/debug');
 	}
 
 }
