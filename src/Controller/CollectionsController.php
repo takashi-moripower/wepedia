@@ -159,7 +159,7 @@ class CollectionsController extends AppController {
 		$schedules = $table_s->find()
 				->where(['date >=' => $date_start])
 				->where(['date <=' => $date])
-				->contain([ 'Users' => ['fields' => ['name']]]);
+				->contain([ 'Users' => ['fields' => ['id','name']]]);
 
 		$this->set(compact('date', 'schedules'));
 		$this->viewBuilder()->layout('collections2');

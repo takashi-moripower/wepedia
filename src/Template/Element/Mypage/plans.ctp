@@ -7,6 +7,6 @@ if( empty( $plans )){
 
 
 foreach( $plans as $sale ){
-	echo $this->Html->link( '<i class="fa fa-newspaper-o"></i> '. h($sale->client_name) , ['controller'=>'sales','action'=>'view',$sale->id,'m'],['escape'=>false]);
+	echo $this->Html->link( '<i class="fa fa-newspaper-o"></i> '. h($sale->client_name) , ['controller'=>'sales','action'=>'view',$sale->id,'s'],['escape'=>false]);
 	echo "<br>";
 }

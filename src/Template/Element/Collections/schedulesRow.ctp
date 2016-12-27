@@ -1,4 +1,6 @@
 <?php
+use Cake\I18n\Date;
+
 $diff = ( $date->toUnixString() - $item->date->toUnixString() ) / DAY;
 ?>
 
@@ -13,9 +15,16 @@ $diff = ( $date->toUnixString() - $item->date->toUnixString() ) / DAY;
 	<?php
 	for ($i = 1; $i <= 7; $i++):
 		$key = sprintf('plan%02d', $diff + $i);
+		$d = new Date($date);
+		$d->addDays($i - 1);
 		?>
 		<td class="col-xs-3">
-			<?= nl2br(h($item->{$key})) ?>
+			<div>
+				<?= nl2br(h($item->{$key})) ?>
+			</div>
+			<div>
+				<?= $this->Element('Mypage/plans', ['date' => $d , 'user'=>$item->user]) ?>
+			</div>
 		</td>
 	<?php endfor ?>
 </tr>
