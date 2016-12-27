@@ -63,7 +63,7 @@ if (empty($sales->toArray())) {
 					<td><?= $sale->latest->date->format('Y-m-d') ?></td>
 					<td><?= $FOLLOW_NAME[$sale->follow] ?></td>
 					<td class="link text-center">
-						<?= $this->Html->link('<i class="fa fa-newspaper-o fa-fw fa-lg"></i>', ['controller' => 'sales', 'action' => 'view', $sale->id], ['escape' => false , 'class'=>'btn btn-default']) ?>
+						<?= $this->Html->link('<i class="fa fa-newspaper-o fa-fw fa-lg"></i>', ['controller' => 'sales', 'action' => 'view', $sale->id,'d'], ['escape' => false , 'class'=>'btn btn-default']) ?>
 						<?= $this->Html->link('<i class="fa fa-pencil fa-fw fa-lg"></i>', ['controller' => 'sales', 'action' => 'add', $sale->root_id], ['escape' => false , 'class'=>'btn btn-default']) ?>
 					</td>
 				</tr>

@@ -34,7 +34,7 @@ $dd_id = $root->getDemandDraftId();
 <div class="text-center">
 	<div class="btn-group" role="group">
 		<?php if (isset($prev_id)): ?>
-			<a href="<?= $this->Url->build(['controller' => 'sales', 'action' => 'view', $prev_id]) ?>" class="btn btn-default">
+			<a href="<?= $this->Url->build(['controller' => 'sales', 'action' => 'view', $prev_id,$nav_type]) ?>" class="btn btn-default">
 				前の報告
 			</a>
 		<?php endif ?>
@@ -47,7 +47,7 @@ $dd_id = $root->getDemandDraftId();
 			</a>
 		<?php endif; ?>
 		<?php if (isset($next_id)): ?>
-			<a href="<?= $this->Url->build(['controller' => 'sales', 'action' => 'view', $next_id]) ?>" class="btn btn-default">
+			<a href="<?= $this->Url->build(['controller' => 'sales', 'action' => 'view', $next_id,$nav_type]) ?>" class="btn btn-default">
 				次の報告
 			</a>
 		<?php endif ?>

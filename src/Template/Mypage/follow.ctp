@@ -19,7 +19,7 @@
 				<td class="text-center"><?= h($sale->date) ?></td>
 				<td class="text-center"><?= h($sale->next_date ?  $sale->next_date->format('Y-m-d') : '' ) ?></td>
 				<td class="text-center link">
-					<?= $this->Html->link('<i class="fa fa-newspaper-o fa-lg fa-fw"></i>',['controller'=>'sales','action'=>'view',$sale->id],['escape'=>false, 'class'=>'btn btn-default']) ?>
+					<?= $this->Html->link('<i class="fa fa-newspaper-o fa-lg fa-fw"></i>',['controller'=>'sales','action'=>'view',$sale->id,'f'],['escape'=>false, 'class'=>'btn btn-default']) ?>
 					<?= $this->Html->link('<i class="fa fa-pencil fa-lg fa-fw"></i>',['controller'=>'sales','action'=>'edit',$sale->id],['escape'=>false, 'class'=>'btn btn-default']) ?>
 					<?= $this->Html->link('<i class="fa fa-reply fa-lg fa-fw"></i>',['controller'=>'sales','action'=>'add',$sale->root_id],['escape'=>false, 'class'=>'btn btn-default']) ?>
 				</td>

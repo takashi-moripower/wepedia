@@ -39,7 +39,7 @@ class HomeController extends AppController {
 		$query_sales = $table_sales->find('read', ['read' => 0])
 				->where(['deleted' => 0, 'published' => 1])
 				->contain(['Users' => ['fields' => ['name']]])
-				->order(['date' => 'DESC']);
+				->order(['date' => 'desc','time'=>'desc']);
 
 		$count_sales = $query_sales->count();
 		$list_sales = $query_sales->limit(5);
@@ -57,7 +57,7 @@ class HomeController extends AppController {
 		$query_demands = $table_demands->find('read', ['read' => 0])
 				->find('flags', ['flags' => 'normal'])
 				->contain(['Users' => ['fields' => ['name']], ])
-				->order(['date' => 'DESC']);
+				->order(['date' => 'desc']);
 
 		$count_demands = $query_demands->count();
 		$list_demands = $query_demands->limit(5);

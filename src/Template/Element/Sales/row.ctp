@@ -14,7 +14,7 @@ $edit_items = [
 	[
 		'label' => '<i class="fa fa-newspaper-o fa-fw"></i> ',
 		'title' => '詳細閲覧',
-		'url' => ['controller' => 'sales', 'action' => 'view', $item->id],
+		'url' => ['controller' => 'sales', 'action' => 'view', $item->id,'i'],
 	],
 ];
 

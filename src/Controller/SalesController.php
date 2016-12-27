@@ -9,6 +9,8 @@ use App\Controller\Traits\setDataTrait;
 use Cake\View\View;
 use Cake\Network\Exception\NotFoundException;
 use Cake\I18n\Time;
+use Cake\Utility\Hash;
+use App\Utils\NavMaker;
 
 /**
  * Sales Controller
@@ -220,7 +222,7 @@ class SalesController extends AppController {
 		$this->render('index');
 	}
 
-	public function view($id) {
+	public function view($id, $nav_type = NULL) {
 
 		$sale = $this->Sales->getWithName($id);
 
@@ -244,11 +246,12 @@ class SalesController extends AppController {
 		foreach ($root->previous as $node) {
 			$node->read = true;
 		}
+		
+		$this->loadComponent('NavMaker');
+		$this->NavMaker->setId( $root , $nav_type );
 
-		$next_id = $root->next_id;
-		$prev_id = $root->prev_id;
 
-		$this->set(compact(['root', 'next_id', 'prev_id']));
+		$this->set(compact(['root']));
 	}
 
 	public function add($root_id = NULL) {
@@ -506,5 +509,58 @@ class SalesController extends AppController {
 		$this->set('data', $prev);
 		$this->render('/Common/debug');
 	}
+	/**
+	 * view の 前へ、次へ機能で使うIDを設定
+	 * @param type $root
+	 */
+/*
+	protected function _setNavId($root, $type) {
+		if (empty($type)) {
+			return;
+		}
+		
+		$this->set('nav_type', $type);
+		
+		switch( $type ){
+			case 'i':
+			
+		}
 
+
+		$session = $this->request->session()->read('search.sales.index');
+
+		$sort = Hash::get($session, 'sort', 'date');
+		$direction = Hash::get($session, 'direction', 'desc');
+
+		$session = Hash::remove($session, 'limit');
+		$session = Hash::remove($session, 'page');
+		$session = Hash::remove($session, 'sort');
+		$session = Hash::remove($session, 'direction');
+
+
+		if ($sort == 'date') {
+			$order = [
+				'date' => $direction,
+				'time' => $direction,
+			];
+		} else {
+			$order = [
+				$sort => $direction,
+			];
+		}
+
+		$order += ['id' => 'asc'];
+
+		debug($order);
+
+
+		$query = $this->Sales->find('search', ['search' => $session]);
+
+		$NM = new NavMaker($order, $root);
+		$this->set('prev_id', $NM->getId($query));
+
+		$NMR = new NavMaker($order, $root, true);
+		$this->set('next_id', $NMR->getId($query));
+	}
+*/
 }

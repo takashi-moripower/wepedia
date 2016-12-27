@@ -22,7 +22,7 @@
 
 			<?php foreach ($list_sales as $sale): ?>
 				<tr>
-					<td class="link"><?= $this->Html->link('<i class="fa fa-newspaper-o fa-fw"></i>', ['controller' => 'sales', 'action' => 'view', $sale->id], ['escape' => false,'class'=>'btn btn-default']) ?></td>
+					<td class="link"><?= $this->Html->link('<i class="fa fa-newspaper-o fa-fw"></i>', ['controller' => 'sales', 'action' => 'view', $sale->id,'h'], ['escape' => false,'class'=>'btn btn-default']) ?></td>
 					<td class="face face48">
 						<?= $this->Element('face', ['id' => $sale->user_id]) ?>
 					</td>
