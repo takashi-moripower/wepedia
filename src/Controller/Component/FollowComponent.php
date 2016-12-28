@@ -50,8 +50,8 @@ class FollowComponent extends Component {
 			'child_id is' => NULL,
 		]);
 		$collection = new \App\Model\Entity\Collections\FollowsCollection($cq);
-		
-		$this->_controller->set('collection',$collection);
+
+		$this->_controller->set('collection', $collection);
 
 		if ($date_string_start) {
 			$date_start = new Date($date_string_start);
@@ -68,6 +68,11 @@ class FollowComponent extends Component {
 		$this->_controller->set(compact('date_start', 'date_end'));
 
 		$query = $this->Sales->find('Flags', ['flags' => 'normal'])
+				->order([
+					'date'=>'desc',
+					'time'=>'desc',
+					'id'=>'asc',
+				])
 				->where([
 			'user_id' => $user_id,
 			'result' => Defines::SALES_RESULT_FOLLOWING,
@@ -112,40 +117,41 @@ class FollowComponent extends Component {
 		return $query;
 	}
 
-	public function view0($user_id, $date_string_start, $date_string_end) {
-		if (empty($user_id)) {
-			$user_id = $this->_controller->getLoginUser()['id'];
-		}
-		$this->_user = $this->Users->get($user_id);
+	/*
+	  public function view0($user_id, $date_string_start, $date_string_end) {
+	  if (empty($user_id)) {
+	  $user_id = $this->_controller->getLoginUser()['id'];
+	  }
+	  $this->_user = $this->Users->get($user_id);
 
-		if (empty($date_string)) {
-			$date = new Date('6 Month ago');
-		} else {
-			$date = new Date($date_string);
-		}
+	  if (empty($date_string)) {
+	  $date = new Date('6 Month ago');
+	  } else {
+	  $date = new Date($date_string);
+	  }
 
 
-		$sales = $this->Sales->find('Flags', ['flags' => 'normal'])
-				->where([
-					'user_id' => $user_id,
-					'result' => Defines::SALES_RESULT_FOLLOWING,
-					'child_id is' => NULL,
-					'date >=' => $date,
-				])
-				->order(['date' => 'DESC', 'time' => 'DESC']);
+	  $sales = $this->Sales->find('Flags', ['flags' => 'normal'])
+	  ->where([
+	  'user_id' => $user_id,
+	  'result' => Defines::SALES_RESULT_FOLLOWING,
+	  'child_id is' => NULL,
+	  'date >=' => $date,
+	  ])
+	  ->order(['date' => 'DESC', 'time' => 'DESC']);
 
-		$date_options = [
-			(new Date('1 month ago'))->format('Y-m-d') => '過去1カ月',
-			(new Date('6 month ago'))->format('Y-m-d') => '過去6カ月',
-			(new Date('12 month ago'))->format('Y-m-d') => '過去1年'
-		];
+	  $date_options = [
+	  (new Date('1 month ago'))->format('Y-m-d') => '過去1カ月',
+	  (new Date('6 month ago'))->format('Y-m-d') => '過去6カ月',
+	  (new Date('12 month ago'))->format('Y-m-d') => '過去1年'
+	  ];
 
-		$this->_controller->set([
-			'user' => $this->_user,
-			'sales' => $sales,
-			'date' => $date,
-			'date_options' => $date_options,
-		]);
-	}
-
+	  $this->_controller->set([
+	  'user' => $this->_user,
+	  'sales' => $sales,
+	  'date' => $date,
+	  'date_options' => $date_options,
+	  ]);
+	  }
+	 */
 }
