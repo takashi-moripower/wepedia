@@ -107,8 +107,8 @@ class SalesController extends AppController {
 	 */
 	public function index() {
 		return $this->_desktopIndex([
-					'flags' => 'normal',
-					'limit' => 20
+				'flags' => 'normal',
+				'limit' => 20
 		]);
 	}
 
@@ -146,6 +146,19 @@ class SalesController extends AppController {
 		return $this->_desktopIndex($search_default);
 	}
 
+	/*
+	 * 一覧表示（DM)
+	 */
+
+	public function directMail() {
+		$search_default = [
+			'flags' => 'direct_mail',
+			'limit' => 20
+		];
+
+		return $this->_desktopIndex($search_default);
+	}
+
 	protected function _desktopIndex($search_default) {
 
 		/* エクスポートボタンを押した結果なら、csvファイルとして出力　 */
@@ -163,7 +176,7 @@ class SalesController extends AppController {
 
 		$search_param = $this->request->data + $search_default;
 		$query = $this->Sales->find('search', $this->Sales->filterParams($search_param))
-				->contain(['Users']);
+			->contain(['Users']);
 
 		/* 	通常報告一覧の場合、最終報告のみ表示	 */
 		if ($search_param['flags'] == 'normal') {
@@ -177,9 +190,9 @@ class SalesController extends AppController {
 
 		/* 	取得するフィールドの定義		 */
 		$query->group('Sales.id')
-				->contain([
-					'Users' => ['fields' => ['name', 'face']],
-					'UnreadSales' => ['fields' => ['user_id'], 'conditions' => ['UnreadSales.user_id' => $loginuser_id]]
+			->contain([
+				'Users' => ['fields' => ['name', 'face']],
+				'UnreadSales' => ['fields' => ['user_id'], 'conditions' => ['UnreadSales.user_id' => $loginuser_id]]
 		]);
 
 		/* 	表示順設定	 */
@@ -207,8 +220,8 @@ class SalesController extends AppController {
 		$table_links = TableRegistry::get('SalesUsers');
 		if (!empty($list_id)) {
 			$lsit_unread = $table_links->find('list')
-					->where(['user_id' => $loginuser_id, 'sale_id IN' => $list_id])
-					->toArray();
+				->where(['user_id' => $loginuser_id, 'sale_id IN' => $list_id])
+				->toArray();
 		} else {
 			$lsit_unread = [];
 		}
@@ -246,9 +259,9 @@ class SalesController extends AppController {
 		foreach ($root->previous as $node) {
 			$node->read = true;
 		}
-		
+
 		$this->loadComponent('NavMaker');
-		$this->NavMaker->setId( $root , $nav_type );
+		$this->NavMaker->setId($root, $nav_type);
 
 
 		$this->set(compact(['root']));
@@ -312,7 +325,7 @@ class SalesController extends AppController {
 
 		$search_param = $this->request->data + $search_default;
 		$query = $this->Sales->find('search', $this->Sales->filterParams($search_param))
-				->contain(['Users']);
+			->contain(['Users']);
 
 		$this->loadComponent('Export');
 
@@ -383,14 +396,14 @@ class SalesController extends AppController {
 
 	public function deleteRoot($root_id) {
 		$nodes = $this->Sales->find()
-				->where(['root_id' => $root_id]);
+			->where(['root_id' => $root_id]);
 		foreach ($nodes as $node) {
 			$node->flags = 'deleted';
 			$this->Sales->save($node);
 		}
 
 		$demands = $this->Sales->Demands->find()
-				->where(['sale_id' => $root_id]);
+			->where(['sale_id' => $root_id]);
 		foreach ($demands as $demand) {
 			$demand->flags = 'deleted';
 			$this->Sales->Demands->save($demand);
@@ -486,81 +499,4 @@ class SalesController extends AppController {
 		return $this->render('/Common/emptyTrash');
 	}
 
-	public function debug() {
-
-		$key = 'date';
-
-		$target = $this->Sales->get(2783, ['fields' => ['id', $key]]);
-
-
-		$prev = $this->Sales->find()
-				->where(
-						['or' => [
-									[$key . " >" => $target->{$key}],
-									[$key => $target->{$key}, 'id >' => $target->id]
-							]
-						]
-				)
-				->select(['id', $key])
-				->first();
-		;
-
-
-		$this->set('data', $prev);
-		$this->render('/Common/debug');
-	}
-	/**
-	 * view の 前へ、次へ機能で使うIDを設定
-	 * @param type $root
-	 */
-/*
-	protected function _setNavId($root, $type) {
-		if (empty($type)) {
-			return;
-		}
-		
-		$this->set('nav_type', $type);
-		
-		switch( $type ){
-			case 'i':
-			
-		}
-
-
-		$session = $this->request->session()->read('search.sales.index');
-
-		$sort = Hash::get($session, 'sort', 'date');
-		$direction = Hash::get($session, 'direction', 'desc');
-
-		$session = Hash::remove($session, 'limit');
-		$session = Hash::remove($session, 'page');
-		$session = Hash::remove($session, 'sort');
-		$session = Hash::remove($session, 'direction');
-
-
-		if ($sort == 'date') {
-			$order = [
-				'date' => $direction,
-				'time' => $direction,
-			];
-		} else {
-			$order = [
-				$sort => $direction,
-			];
-		}
-
-		$order += ['id' => 'asc'];
-
-		debug($order);
-
-
-		$query = $this->Sales->find('search', ['search' => $session]);
-
-		$NM = new NavMaker($order, $root);
-		$this->set('prev_id', $NM->getId($query));
-
-		$NMR = new NavMaker($order, $root, true);
-		$this->set('next_id', $NMR->getId($query));
-	}
-*/
 }

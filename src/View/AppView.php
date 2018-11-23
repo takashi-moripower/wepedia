@@ -18,6 +18,7 @@ namespace App\View;
 use Cake\View\View;
 use Cake\Core\Configure;
 use App\Utils\AppUtility;
+
 /**
  * Application View
  *
@@ -38,14 +39,14 @@ class AppView extends View {
 	 */
 	public function initialize(array $options = []) {
 
-        $this->loadHelper('Html', ['className' => 'BootstrapUI.Html']);
-        $this->loadHelper('Form', ['className' => 'BootstrapUI.Form']);
-        $this->loadHelper('Flash', ['className' => 'BootstrapUI.Flash']);
-        $this->loadHelper('Paginator', ['className' => 'BootstrapUI.Paginator']);
+		$this->loadHelper('Html', ['className' => 'BootstrapUI.Html']);
+		$this->loadHelper('Form', ['className' => 'BootstrapUI.Form']);
+		$this->loadHelper('Flash', ['className' => 'BootstrapUI.Flash']);
+		$this->loadHelper('Paginator', ['className' => 'BootstrapUI.Paginator']);
 	}
 
 	public function getAction() {
-		$action = AppUtility::snake( $this->request->action );
+		$action = AppUtility::snake($this->request->action);
 		return $action;
 	}
 
@@ -53,12 +54,12 @@ class AppView extends View {
 		$controller = AppUtility::snake($this->name);
 		return $controller;
 	}
-	
-	public function getLoginUser(){
-		if( !isset($this->request->Session()->read('Auth')['User'])){
+
+	public function getLoginUser() {
+		if (!isset($this->request->Session()->read('Auth')['User'])) {
 			return NULL;
 		}
-		return $this->request->Session()->read('Auth')['User'];		
+		return $this->request->Session()->read('Auth')['User'];
 	}
 
 	public function isAdmin() {
@@ -66,28 +67,33 @@ class AppView extends View {
 		$list_admin = Configure::read('user.admin');
 		return in_array($loginUser['name'], $list_admin);
 	}
-	
-	public function isMobile(){
-		return $this->request->is('mobile');		
+
+	public function isMobile() {
+		return $this->request->is('mobile');
 	}
-	
-	
+
 	/**
 	 * snake
 	 * @param type $controller
 	 * @param type $action
 	 * @return boolean
 	 */
-	
-	public function isMatch( $controller , $action = NULL ){
-		if( !empty($controller) && !in_array( $this->getController() , (array)$controller) ){
+	public function isMatch($controller, $action = NULL) {
+		if (!empty($controller) && !in_array($this->getController(), (array) $controller)) {
 			return false;
 		}
-		
-		if( !empty($action) && !in_array( $this->getAction() , (array)$action) ){
-			return false;
+
+		if (empty($action)) {
+			return true;
+		}
+
+		foreach ((array) $action as $a) {
+			if ($this->getAction() == AppUtility::snake($a)) {
+				return true;
+			}
 		}
 		
-		return true;
+		return false;
 	}
+
 }

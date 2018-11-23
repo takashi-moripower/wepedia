@@ -6,6 +6,10 @@ $tabs = [
 		'action' => 'index',
 	],
 	[
+		'label' => 'DM',
+		'action' => 'directMail',
+	],
+	[
 		'label' => '下書き',
 		'action' => 'draft',
 	],

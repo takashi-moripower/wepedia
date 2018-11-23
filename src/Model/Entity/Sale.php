@@ -178,6 +178,7 @@ class Sale extends Entity {
 		}
 
 		$table_s = TableRegistry::get('Sales');
+		
 
 		$latest = $table_s
 				->find('Latest', ['root_id' => $this->root_id])

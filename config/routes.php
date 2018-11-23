@@ -73,7 +73,7 @@ Router::scope('/', function ($routes) {
      */
     $routes->fallbacks('InflectedRoute');
 });
-Router::fullBaseUrl('https://wenet.sakura.ne.jp');
+//Router::fullBaseUrl('https://wenet.sakura.ne.jp');
 
 /**
  * Load all plugin routes.  See the Plugin documentation on

@@ -64,10 +64,10 @@ class SalesTable extends Table {
 
 		$this->hasOne('UnreadSales', [
 			'foreignKey' => 'sale_id',
-			'condition' => [ 'user_id' => $this->_getLoginUserId()],
+			'condition' => ['user_id' => $this->_getLoginUserId()],
 		]);
-		
-		$this->eventManager()->on('Model.Import.beforeImport' , [$this,'beforeImport']);
+
+		$this->eventManager()->on('Model.Import.beforeImport', [$this, 'beforeImport']);
 	}
 
 	/**
@@ -78,45 +78,45 @@ class SalesTable extends Table {
 	 */
 	public function validationDefault(Validator $validator) {
 		$validator
-				->add('id', 'valid', ['rule' => 'numeric'])
-				->allowEmpty('id', 'create')
-				->add('id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+			->add('id', 'valid', ['rule' => 'numeric'])
+			->allowEmpty('id', 'create')
+			->add('id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
 		$validator
-				->allowEmpty('*');
+			->allowEmpty('*');
 
 		$validator
-				->allowEmpty('charge_person');
+			->allowEmpty('charge_person');
 
 		$validator
-				->allowEmpty('title');
+			->allowEmpty('title');
 
 		$validator
-				->allowEmpty('report');
+			->allowEmpty('report');
 
 		$validator
-				->allowEmpty('result');
+			->allowEmpty('result');
 
 		$validator
-				->allowEmpty('treatment');
+			->allowEmpty('treatment');
 
 		$validator
-				->allowEmpty('state');
+			->allowEmpty('state');
 
 		$validator
-				->allowEmpty('next_date');
+			->allowEmpty('next_date');
 
 		$validator
-				->add('boss_check', 'valid', ['rule' => 'numeric'])
-				->allowEmpty('boss_check');
+			->add('boss_check', 'valid', ['rule' => 'numeric'])
+			->allowEmpty('boss_check');
 
 		$validator
-				->add('published', 'valid', ['rule' => 'numeric'])
-				->allowEmpty('published');
+			->add('published', 'valid', ['rule' => 'numeric'])
+			->allowEmpty('published');
 
 		$validator
-				->add('deleted', 'valid', ['rule' => 'numeric'])
-				->allowEmpty('deleted');
+			->add('deleted', 'valid', ['rule' => 'numeric'])
+			->allowEmpty('deleted');
 
 		return $validator;
 	}
@@ -136,8 +136,8 @@ class SalesTable extends Table {
 	public function unreadAll($entity) {
 		$table_users = TableRegistry::get('Users');
 		$list_users = $table_users->find()
-				->extract("id")
-				->toArray();
+			->extract("id")
+			->toArray();
 		$table_SU = TableRegistry::get('SalesUsers');
 
 		foreach ($list_users as $id_user) {
@@ -213,7 +213,7 @@ class SalesTable extends Table {
 		}
 
 		$query
-				->where(['Sales.user_id IN' => $user_id]);
+			->where(['Sales.user_id IN' => $user_id]);
 		return $query;
 	}
 
@@ -224,16 +224,16 @@ class SalesTable extends Table {
 	public function searchConfiguration() {
 		$search = new Manager($this);
 		$search
-				->finder('flags', [ 'finder' => 'Flags'])
-				->finder('read', [ 'finder' => 'Read'])
-				->finder('date', [ 'finder' => 'Date'])
-				->finder('user_id', [ 'finder' => 'UsersJson'])
-				->like('freeword', ['before' => true, 'after' => true, 'field' => [ $this->aliasField('title') , $this->aliasField('report'), $this->aliasField('charge_person'), $this->aliasField('client_name'), ]])
-				->like('client_name', ['before' => true, 'after' => true, 'field' => [$this->aliasField('client_name')]])
-				->value('boss_check', [ 'field' => 'boss_check'])
-				->value('boss_check2', [ 'field' => 'boss_check2'])
-				->value('result', [ 'field' => 'result'])
-				->value('date_direct', [ 'field' => 'date'])
+			->finder('flags', ['finder' => 'Flags'])
+			->finder('read', ['finder' => 'Read'])
+			->finder('date', ['finder' => 'Date'])
+			->finder('user_id', ['finder' => 'UsersJson'])
+			->like('freeword', ['before' => true, 'after' => true, 'field' => [$this->aliasField('title'), $this->aliasField('report'), $this->aliasField('charge_person'), $this->aliasField('client_name'),]])
+			->like('client_name', ['before' => true, 'after' => true, 'field' => [$this->aliasField('client_name')]])
+			->value('boss_check', ['field' => 'boss_check'])
+			->value('boss_check2', ['field' => 'boss_check2'])
+			->value('result', ['field' => 'result'])
+			->value('date_direct', ['field' => 'date'])
 		;
 		return $search;
 	}
@@ -246,28 +246,39 @@ class SalesTable extends Table {
 	 */
 	public function findDmDate(Query $query, array $options) {
 		$query
-				->where(['root_id IS' => NULL, 'project_do' => Defines::SALES_DO_DIRECTMAIL])
-				->select( ['label' => $query->func()->concat( [ 'Sales.title' =>'literal', '  [' , 'Sales.date'=>'literal' , ' ]'])] )
-				->select('date')
-				->group(['date'])
-				->order(['date' => 'DESC']);
+			->where(['root_id IS' => NULL, 'project_do' => Defines::SALES_DO_DIRECTMAIL])
+			->select(['label' => $query->func()->concat(['Sales.title' => 'literal', '  [', 'Sales.date' => 'literal', ' ]'])])
+			->select('date')
+			->group(['date'])
+			->order(['date' => 'DESC']);
 		return $query;
 	}
+
 	/**
 	 * あるNodeが所属するスレッドの正規化
 	 * @param type $entity
 	 */
 	public function setTree($entity) {
 		$root_id = $entity->root_id;
-		$nodes = $this->find('Nodes', ['root_id' => $root_id])
-				->toArray();
 
-		$child = NULL;
-		foreach ($nodes as $node) {
-			$node->child_id = $child;
-			$child = $node->id;
-			$this->save($node);
+		$children = $this->find()
+			->where(['root_id' => $root_id])
+			->order(['created' => 'DESC']);
+
+		if ($children->count() == 0) {
+			return;
 		}
+
+		$next = null;
+		foreach ($children as $child) {
+			$child = $this->patchEntity($child, ['child_id' => $next]);
+			$this->save($child);
+			$next = $child->id;
+		}
+
+		$root = $this->get($root_id);
+		$root = $this->patchEntity($root, ['child_id' => $next]);
+		$this->save($root);
 	}
 
 	/**
@@ -275,14 +286,15 @@ class SalesTable extends Table {
 	 * @param type $root_id
 	 * @return type
 	 */
-	public function getEntityToAdd( $root_id = NULL ) {
-		$copy_key = [ 'title', 'user_id', 'client_name', 'charge_person', 'project_do', 'project_act'];
+	public function getEntityToAdd($root_id = NULL) {
+		$copy_key = ['title', 'user_id', 'client_name', 'charge_person', /*'project_do',*/ 'project_act'];
 
 		if ($root_id) {
 			$root = $this->get($root_id, ['contain' => 'Users']);
 			$source = [
 				'root_id' => $root_id,
 				'flags' => 'normal',
+				'project_do' => Defines::SALES_DO_REPORT,	//181115改修　返信は常に報告扱いとする
 			];
 			foreach ($copy_key as $key) {
 				$source[$key] = $root[$key];
@@ -300,7 +312,7 @@ class SalesTable extends Table {
 				'root_id' => NULL
 			];
 		}
-		
+
 		return $this->newEntity($source);
 	}
 
@@ -314,8 +326,8 @@ class SalesTable extends Table {
 		$root_id = $options['root_id'];
 
 		return $query->find('flags', ['flags' => 'unpublished'])
-						->where(['root_id' => $root_id])
-						->order(['date' => 'DESC', 'time' => 'DESC']);
+				->where(['root_id' => $root_id])
+				->order(['date' => 'DESC', 'time' => 'DESC']);
 	}
 
 	/**
@@ -327,14 +339,14 @@ class SalesTable extends Table {
 		$root_id = $options['root_id'];
 
 		$query
-				->find('Flags', ['flags' => 'normal'])
-				->andWhere([
-					'or' => [
-						[$this->aliasField('root_id') => $root_id],
-						[$this->aliasField('id') => $root_id],
-					]
-				])
-				->order(['date' => 'DESC', 'time' => 'DESC']);
+			->where(['deleted' => 0, 'published' => 1])
+			->andWhere([
+				'or' => [
+					[$this->aliasField('root_id') => $root_id],
+					[$this->aliasField('id') => $root_id],
+				]
+			])
+			->order(['date' => 'DESC', 'time' => 'DESC']);
 
 		return $query;
 	}
@@ -348,7 +360,7 @@ class SalesTable extends Table {
 	public function findLatest(Query $query, array $options) {
 		$root_id = $options['root_id'];
 		$query->find('Nodes', ['root_id' => $root_id])
-				->andWhere(['child_id is' => NULL]);
+			->andWhere(['child_id is' => NULL]);
 		return $query;
 	}
 
@@ -360,7 +372,7 @@ class SalesTable extends Table {
 	public function findPrevious(Query $query, array $options) {
 		$root_id = $options['root_id'];
 		$query->find('Nodes', ['root_id' => $root_id])
-				->andWhere(['child_id is not' => NULL]);
+			->andWhere(['child_id is not' => NULL]);
 		return $query;
 	}
 
@@ -371,20 +383,47 @@ class SalesTable extends Table {
 	 */
 	public function getWithName($id) {
 		return $this->get($id, [
-					'contain' => [
-						'Users' => ['fields' => ['id', 'name']],
-						'Agents' => ['fields' => ['id', 'name']]
-					]
+				'contain' => [
+					'Users' => ['fields' => ['id', 'name']],
+					'Agents' => ['fields' => ['id', 'name']]
+				]
 		]);
 	}
-	
-	
-	public function beforeImport( $event ){
+
+	public function beforeImport($event) {
 		$sale = $event->subject();
-		
-		if( !isset( $sale->published ) ){
+
+		if (!isset($sale->published)) {
 			$sale->published = true;
 			$sale->deleted = false;
 		}
 	}
+
+	public function findFlags(Query $query, array $options) {
+		if (empty($options['flags'])) {
+			return $query;
+		}
+
+		switch ($options['flags']) {
+			case 'unpublished':
+				$query = $query->where(['deleted' => 0, 'published' => 0]);
+				break;
+
+			case 'deleted':
+				$query = $query->where(['deleted' => 1]);
+				break;
+
+			case 'direct_mail':
+				$query = $query->where(['deleted' => 0, 'published' => 1, 'project_do' => Defines::SALES_DO_DIRECTMAIL]);
+				break;
+
+			case 'normal':
+			default:
+				$query = $query->where(['deleted' => 0, 'published' => 1, 'project_do <>' => Defines::SALES_DO_DIRECTMAIL]);
+				break;
+		}
+
+		return $query;
+	}
+
 }

@@ -21,7 +21,7 @@ class Defines{
 	const SALES_RESULT_FOLLOWING = 'フォロー継続';
 	
 	const SALES_DO_DIRECTMAIL = 'DM発送';
-	
+	const SALES_DO_REPORT = '報告';
 	
 	const WEEK_DAYS = ['日','月', '火', '水', '木', '金', '土', ];
 	
