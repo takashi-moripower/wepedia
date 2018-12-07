@@ -87,7 +87,7 @@ class SalesController extends AppController {
 	public function initialize() {
 		parent::initialize();
 
-		$this->_loadSearchComponents(['index', 'draft', 'trashbox']);
+		$this->_loadSearchComponents(['index', 'directMail' ,'draft', 'trashbox']);
 
 		$this->import_columns = $this->export_columns;
 	}
@@ -168,7 +168,7 @@ class SalesController extends AppController {
 
 			return $this->_export($search_default);
 		}
-
+		
 		$loginuser_id = $this->Auth->user('id');
 
 
