@@ -1,0 +1,5 @@
+#,報告者名,顧客名,日付(年/月/日）,時間（24時間表記　時：分）,相手先担当者,件名,報告本文,結果,状況,取り扱い,次回予定日,Do,Act,代理記入者名
+#id,user_name,client_name,date,time,charge_person,title,report,result,state,treatment,next_date,project_do,project_act,agent_name
+,moripower-admin,新潟国際ビジネス専門学校,2016/8/22,,田中博一,クイックマスターの導入について,"今はFOMを使用しているが、次年度に全面的に見直しを予定している。2月上旬に選定。商品内容に興味を示す。見本を送り検討。Word、Excelを各200冊予定。
+
+売上見込700千円",フォロー継続,良い（順調）,見本送付,2016/8/31,報告,電話,

@@ -2,12 +2,3 @@
 /config/app.php
 /tmp/*
 /logs/*
-backup
-nbproject
-tmp
-/.htaccess
-/info.php
-/webroot/download
-/webroot/.htaccess.backup171012
-/webroot/css
-/webroot/upload

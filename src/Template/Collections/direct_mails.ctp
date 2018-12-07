@@ -28,7 +28,9 @@ $FOLLOW_NAME = Defines::SALES_FOLLOW_NAME;
 		<table class="table table-bordered ">
 			<tbody>
 				<?php
-				$label_text = $collection->title . "[" . $collection->date->Format('Y-m-d') . '] <i class="fa fa-caret-down"></i>';
+				$date = isset( $collection->date ) ? $collection->date->Format('Y-m-d') : null;
+				
+				$label_text = $collection->title . "[" . $date . '] <i class="fa fa-caret-down"></i>';
 				$url = "#collapse{$col_id}";
 				$label = $this->Html->link($label_text, $url, ['escape' => false, 'data-toggle' => 'collapse',]);
 				echo $this->Element('Collections/dmRow', ['collection' => $collection, 'label' => $label]);
