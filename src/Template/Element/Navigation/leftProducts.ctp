@@ -5,7 +5,7 @@
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked">
 			<?php
-			foreach ($list_products as $product) :
+			foreach ((array)$list_products as $product) :
 				if ($category != $product->category) {
 					if ($category != NULL) {
 						echo '</ul>';

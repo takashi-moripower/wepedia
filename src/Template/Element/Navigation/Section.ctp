@@ -5,7 +5,7 @@ if (empty($search['user_id'])) {
 	$list_users = json_decode($search['user_id']);
 }
 ?>
-<?php foreach ($sections as $section_name => $section_members): ?>
+<?php foreach ((array)$sections as $section_name => $section_members): ?>
 	<?= h($section_name) ?>
 	<ul class="members">
 		<?php foreach ($section_members as $member_id => $member_name): ?>

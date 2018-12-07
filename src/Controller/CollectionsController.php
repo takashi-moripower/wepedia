@@ -171,8 +171,8 @@ class CollectionsController extends AppController {
 
 		$date_list = $table_s
 				->find('list' , ['valueField'=>'date'])
-				->find('Flags', ['flags' => 'normal'])
-				->where(['project_do' => Defines::SALES_DO_DIRECTMAIL])
+				->find('Flags', ['flags' => 'direct_mail'])
+//				->where(['project_do' => Defines::SALES_DO_DIRECTMAIL])
 				->where(['root_id is' => NULL])
 				->order(['date' => 'DESC'])
 				->select('date')
@@ -182,7 +182,7 @@ class CollectionsController extends AppController {
 
 
 		foreach ($date_list as $date) {
-			$sales = $table_s->find('Flags', ['flags' => 'normal'])
+			$sales = $table_s->find('Flags', ['flags' => 'direct_mail'])
 					->where(['project_do' => Defines::SALES_DO_DIRECTMAIL, 'date' => $date]);
 
 			$collections[] = new \App\Model\Entity\Collections\DirectmailCollection($sales);
